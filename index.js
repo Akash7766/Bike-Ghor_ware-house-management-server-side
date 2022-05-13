@@ -14,7 +14,7 @@ app.use(express.json());
 
 // mongoDB connecttion
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri =
   "mongodb+srv://bikehouse:1YilZKETlxkI97JK@cluster0.pea3c.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {
@@ -31,6 +31,13 @@ async function run() {
       const query = {};
       const cursor = productsCollection.find(query);
       const result = await cursor.toArray();
+      res.send(result);
+    });
+    // get a single product api
+    app.get("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await productsCollection.findOne(query);
       res.send(result);
     });
 

@@ -33,12 +33,21 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
-    // get a single product api
+    // get a single product by id
     app.get("/product/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await productsCollection.findOne(query);
       res.send(result);
+    });
+    // get a single product by email
+    app.get("/product", async (req, res) => {
+      const email = req.query.email;
+      const query = { email };
+      const cursor = productsCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+      console.log(req.query);
     });
 
     // add product api

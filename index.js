@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const res = require("express/lib/response");
+require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -15,8 +16,7 @@ app.use(express.json());
 // mongoDB connecttion
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
-const uri =
-  "mongodb+srv://bikehouse:1YilZKETlxkI97JK@cluster0.pea3c.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.dbuser}:${process.env.dbpass}@cluster0.pea3c.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

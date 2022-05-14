@@ -1,6 +1,7 @@
 // import important things
 const express = require("express");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 const res = require("express/lib/response");
 require("dotenv").config();
 const app = express();
@@ -79,6 +80,14 @@ async function run() {
         options
       );
       res.send(result);
+    });
+    // jwt
+    app.post("/login", async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.secretKey, {
+        expiresIn: "1d",
+      });
+      res.send({ token });
     });
   } finally {
     // do not need at this time

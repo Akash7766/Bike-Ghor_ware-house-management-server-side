@@ -25,6 +25,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
+    console.log("db connected");
     const productsCollection = client.db("bike-house").collection("product");
     // get all the products by this api
     app.get("/products", async (req, res) => {
@@ -47,7 +48,13 @@ async function run() {
       const cursor = productsCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
-      console.log(req.query);
+    });
+    // delete single product
+    app.delete("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await productsCollection.deleteOne(query);
+      res.send({ result });
     });
 
     // add product api
@@ -55,6 +62,23 @@ async function run() {
       const product = req.body;
       const result = await productsCollection.insertOne(product);
       res.send({ result });
+    });
+
+    // update a single product
+    app.put("/update/:id", async (req, res) => {
+      const id = req.params.id;
+      const newProduct = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: newProduct,
+      };
+      const result = await productsCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.send(result);
     });
   } finally {
     // do not need at this time
